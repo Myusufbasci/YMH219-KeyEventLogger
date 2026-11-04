@@ -28,7 +28,9 @@ Gereken: .NET 8 SDK veya Visual Studio 2022.
 
 ## Temel Özellikler
 
-- Basılan ve bırakılan tuşun adı, Ctrl/Shift/Alt bilgisi ve milisaniyeli zamanı listede görünür
+- Basılan ve bırakılan tuşun adı, Ctrl/Shift/Alt bilgisi ve milisaniyeli tarih-saati sütunlu listede görünür
+- Yan panelde son tuş, toplam basış sayısı ve en sık basılan 5 tuş gösterilir
+- Alt çubuk pencerenin odakta olup olmadığını söyler; odak yoksa tuş yakalanmaz
 - **Başlat** ve **Durdur** ile kayıt kontrolü
 - Her zaman görünen kayıt göstergesi: `● KAYIT AÇIK` / `○ KAYIT KAPALI`
 - **Temizle** ile listeyi silme
@@ -45,9 +47,9 @@ Kayıt satırı biçimi:
 
 | Sınıf | Görevi |
 |---|---|
-| `KeyEventRecord` | Tek bir tuş olayı ve satır biçimi |
-| `KeyEventLog` | Kayıt durumu, olay listesi ve dosyaya yazma |
-| `MainForm` | Klavye olayları, butonlar ve gösterge |
+| `KeyEventRecord` | Tek bir tuş olayı, satır biçimi ve okunur tuş adı |
+| `KeyEventLog` | Kayıt durumu, olay listesi, istatistik ve dosyaya yazma |
+| `MainForm` | Klavye olayları, butonlar, gösterge ve yan panel |
 
 ## Ekran Görüntüleri
 
@@ -59,4 +61,4 @@ Kayıt satırı biçimi:
 
 - Kayıt sırasında klavye butonlara basamaz. Durdurmak için fare veya `Alt+D` kullanılır.
 - Liste bellekte tutulur, uygulama kapanınca kaydedilmemiş olaylar kaybolur.
-- Tuş istatistiği ve tarih aralığı filtresi yoktur.
+- Tarih aralığına göre filtreleme yoktur.
