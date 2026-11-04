@@ -2,7 +2,7 @@
 
 Windows Forms klavye olaylarının nasıl çalıştığını gösteren eğitsel bir uygulama. Yalnızca kendi penceresi odaktayken basılan tuşları, tuş adı ve zamanla birlikte listeler. YMH 219 Nesne Tabanlı Programlama dersi uygulama ödevidir.
 
-**Öğrenci:** Ad Soyad - Öğrenci No: 000000000
+**Öğrenci:** Muhammet Yusuf Başçı - Öğrenci No: 235541023
 
 ## Kapsam ve Güvenlik Sınırı
 
