@@ -29,6 +29,8 @@ Gereken: .NET 8 SDK veya Visual Studio 2022.
 ## Temel Özellikler
 
 - Basılan ve bırakılan tuşun adı, Ctrl/Shift/Alt bilgisi ve milisaniyeli tarih-saati sütunlu listede görünür
+- `KeyPress` ile gerçek karakter yakalanır: Türkçe harfler `Oem4` gibi kodlarla değil `ğ` olarak görünür
+- Yazılan metin ayrı bir alanda oluşur, geri silme ve Enter işlenir
 - Yan panelde son tuş, toplam basış sayısı ve en sık basılan 5 tuş gösterilir
 - Alt çubuk pencerenin odakta olup olmadığını söyler; odak yoksa tuş yakalanmaz
 - **Başlat** ve **Durdur** ile kayıt kontrolü
@@ -40,7 +42,8 @@ Gereken: .NET 8 SDK veya Visual Studio 2022.
 Kayıt satırı biçimi:
 
 ```
-2026-11-03 21:50:01.123 | KeyDown | A | Shift
+2026-11-03 21:50:01.123 | KeyDown | A | Shift | 'A'
+2026-11-03 21:50:01.456 | KeyDown | Oem4 | 'ğ'
 ```
 
 ## Sınıf Yapısı
@@ -60,5 +63,6 @@ Kayıt satırı biçimi:
 ## Bilinen Sınırlamalar
 
 - Kayıt sırasında klavye butonlara basamaz. Durdurmak için fare veya `Alt+D` kullanılır.
+- Yazılan metin alanı yalnızca son 200 karakteri gösterir.
 - Liste bellekte tutulur, uygulama kapanınca kaydedilmemiş olaylar kaybolur.
 - Tarih aralığına göre filtreleme yoktur.
