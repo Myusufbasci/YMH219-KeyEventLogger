@@ -20,6 +20,9 @@ partial class MainForm
     private Label lblCount;
     private Label lblTopTitle;
     private Label lblTop;
+    private Panel pnlTyped;
+    private Label lblTypedTitle;
+    private Label lblTyped;
     private Panel pnlFooter;
     private Label lblMessage;
     private Label lblScope;
@@ -53,6 +56,9 @@ partial class MainForm
         lblCount = new Label();
         lblTopTitle = new Label();
         lblTop = new Label();
+        pnlTyped = new Panel();
+        lblTypedTitle = new Label();
+        lblTyped = new Label();
         pnlFooter = new Panel();
         lblMessage = new Label();
         lblScope = new Label();
@@ -220,6 +226,31 @@ partial class MainForm
         lblTop.Name = "lblTop";
         lblTop.Size = new Size(192, 130);
         //
+        // pnlTyped
+        //
+        pnlTyped.BackColor = Color.FromArgb(245, 247, 248);
+        pnlTyped.Controls.Add(lblTyped);
+        pnlTyped.Controls.Add(lblTypedTitle);
+        pnlTyped.Dock = DockStyle.Bottom;
+        pnlTyped.Name = "pnlTyped";
+        pnlTyped.Padding = new Padding(10, 6, 10, 6);
+        pnlTyped.Size = new Size(560, 96);
+        //
+        // lblTypedTitle
+        //
+        lblTypedTitle.Dock = DockStyle.Top;
+        lblTypedTitle.ForeColor = Color.FromArgb(84, 96, 102);
+        lblTypedTitle.Name = "lblTypedTitle";
+        lblTypedTitle.Size = new Size(540, 20);
+        lblTypedTitle.Text = "Yazılan metin";
+        //
+        // lblTyped
+        //
+        lblTyped.AutoEllipsis = true;
+        lblTyped.Dock = DockStyle.Fill;
+        lblTyped.Font = new Font("Segoe UI", 11F);
+        lblTyped.Name = "lblTyped";
+        //
         // pnlFooter
         //
         pnlFooter.BackColor = Color.FromArgb(236, 239, 241);
@@ -258,8 +289,9 @@ partial class MainForm
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.White;
-        ClientSize = new Size(780, 480);
+        ClientSize = new Size(780, 520);
         Controls.Add(lvEvents);
+        Controls.Add(pnlTyped);
         Controls.Add(pnlStats);
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
@@ -269,10 +301,12 @@ partial class MainForm
         StartPosition = FormStartPosition.CenterScreen;
         Text = "Key Event Logger - YMH219";
         KeyDown += MainForm_KeyDown;
+        KeyPress += MainForm_KeyPress;
         KeyUp += MainForm_KeyUp;
         pnlHeader.ResumeLayout(false);
         pnlStats.ResumeLayout(false);
         pnlStats.PerformLayout();
+        pnlTyped.ResumeLayout(false);
         pnlFooter.ResumeLayout(false);
         ResumeLayout(false);
     }

@@ -36,6 +36,35 @@ Check(new KeyEventRecord(time, KeyEventKind.KeyDown, Keys.D7, Keys.None).Display
 Check(new KeyEventRecord(time, KeyEventKind.KeyDown, Keys.ShiftKey, Keys.Shift).DisplayText == "Shift", "Shift tek başına iki kez yazılmaz");
 Check(new KeyEventRecord(time, KeyEventKind.KeyDown, Keys.A, Keys.Control | Keys.Shift).DisplayText is "Shift + Ctrl + A" or "Ctrl + Shift + A", "kısayol okunur yazılır");
 
+var typing = new KeyEventLog();
+Check(typing.AddCharacter('x') == null && typing.TypedText == "", "kayıt kapalıyken karakter işlenmez");
+typing.Start();
+void Press(Keys key, char character)
+{
+    typing.Add(KeyEventKind.KeyDown, key, Keys.None, time);
+    typing.AddCharacter(character);
+    typing.Add(KeyEventKind.KeyUp, key, Keys.None, time);
+}
+Press(Keys.Oem4, 'ğ');
+Check(typing.Records[0].KeyName == "ğ" && typing.Records[1].KeyName == "Oem4", "Türkçe harf KeyDown satırında görünür");
+Check(typing.Records[0].ToString().EndsWith("| Oem4 | 'ğ'"), "dosya satırı karakteri içerir: " + typing.Records[0]);
+Press(Keys.I, 'ı');
+Press(Keys.Space, ' ');
+Press(Keys.X, 'x');
+Press(Keys.Back, '\b');
+Check(typing.TypedText == "ğı ", "yazılan metin ve geri silme: '" + typing.TypedText + "'");
+Check(typing.Records[4].KeyName == "Space", "boşluk tuş adıyla listelenir");
+Press(Keys.Enter, '\r');
+Check(typing.TypedText == "ğı " + Environment.NewLine, "Enter yeni satır açar");
+Check(typing.Records[^2].KeyName == "Enter", "Enter tuş adıyla listelenir");
+typing.Add(KeyEventKind.KeyDown, Keys.A, Keys.Control, time);
+typing.AddCharacter('\u0001');
+Check(typing.Records[^1].DisplayText == "Ctrl + A" && !typing.TypedText.Contains('\u0001'), "Ctrl+A metne karışmaz");
+typing.Clear();
+Check(typing.TypedText == "" && typing.Records.Count == 0, "temizle yazılan metni de siler");
+for (int i = 0; i < 3; i++) typing.AddCharacter('\b');
+Check(typing.TypedText == "", "boş metinde geri silme hata vermez");
+
 log.Stop();
 log.Add(KeyEventKind.KeyDown, Keys.B, Keys.None, time);
 Check(log.Records.Count == 2, "durdurulunca olay eklenmez");

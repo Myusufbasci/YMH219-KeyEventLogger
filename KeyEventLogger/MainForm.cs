@@ -3,12 +3,15 @@ namespace KeyEventLogger;
 public partial class MainForm : Form
 {
     private const int TopKeyCount = 5;
+    private const int KeyColumn = 2;
+    private const int TypedTextLimit = 200;
     private static readonly Color StartColor = Color.FromArgb(46, 125, 50);
     private static readonly Color StopColor = Color.FromArgb(198, 40, 40);
     private static readonly Color InactiveColor = Color.FromArgb(69, 90, 100);
     private static readonly Color KeyUpTextColor = Color.FromArgb(120, 130, 135);
 
     private readonly KeyEventLog _log = new();
+    private ListViewItem? _lastKeyDownItem;
 
     public MainForm()
     {
@@ -44,8 +47,32 @@ public partial class MainForm : Form
     {
         if (!RecordKey(KeyEventKind.KeyDown, e)) return;
         // Boşluk ve Enter odaktaki butona basmasın; Alt kısayolları (Alt+D gibi) çalışmaya devam etsin.
-        if (!e.Alt) e.SuppressKeyPress = true;
+        // SuppressKeyPress kullanılmaz, çünkü KeyPress gerçek karakteri getirir.
+        if (!e.Alt) e.Handled = true;
     }
+
+    /// <summary>
+    /// Yazı alanı olmayan formda Windows düz harfi de buton kısayolu sayar: D kaydı durdurur, T siler.
+    /// Kayıt sırasında kısayollar yalnızca Alt ile çalışır.
+    /// </summary>
+    protected override bool ProcessDialogChar(char charCode) =>
+        (!_log.IsRecording || (ModifierKeys & Keys.Alt) != 0) && base.ProcessDialogChar(charCode);
+
+    private void MainForm_KeyPress(object? sender, KeyPressEventArgs e)
+    {
+        KeyEventRecord? record = _log.AddCharacter(e.KeyChar);
+        if (!_log.IsRecording) return;
+        e.Handled = true;
+
+        lblTyped.Text = TextTail(_log.TypedText);
+        if (record == null || _lastKeyDownItem == null) return;
+        _lastKeyDownItem.SubItems[KeyColumn].Text = record.KeyName;
+        lblLastKey.Text = record.DisplayText;
+        UpdateStats();
+    }
+
+    private static string TextTail(string text) =>
+        text.Length <= TypedTextLimit ? text : "..." + text[^TypedTextLimit..];
 
     private void MainForm_KeyUp(object? sender, KeyEventArgs e)
     {
@@ -73,6 +100,7 @@ public partial class MainForm : Form
 
         if (kind == KeyEventKind.KeyDown)
         {
+            _lastKeyDownItem = item;
             lblLastKey.Text = record.DisplayText;
             UpdateStats();
         }
@@ -95,6 +123,8 @@ public partial class MainForm : Form
     {
         _log.Clear();
         lvEvents.Items.Clear();
+        _lastKeyDownItem = null;
+        lblTyped.Text = "";
         lblLastKey.Text = "-";
         UpdateStats();
         ShowMessage("Kayıtlar temizlendi.", isError: false);

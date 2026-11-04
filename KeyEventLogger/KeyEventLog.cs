@@ -1,11 +1,15 @@
+using System.Text;
+
 namespace KeyEventLogger;
 
 /// <summary>Kayıt durumunu ve yakalanan olayları tutar. Yalnızca formun ilettiği olayları bilir.</summary>
 public sealed class KeyEventLog
 {
     private readonly List<KeyEventRecord> _records = new();
+    private readonly StringBuilder _typedText = new();
 
     public IReadOnlyList<KeyEventRecord> Records => _records;
+    public string TypedText => _typedText.ToString();
     public bool IsRecording { get; private set; }
 
     /// <summary>Toplam tuş basışı. KeyUp sayılmaz, aksi halde her basış iki kez sayılırdı.</summary>
@@ -15,7 +19,38 @@ public sealed class KeyEventLog
 
     public void Stop() => IsRecording = false;
 
-    public void Clear() => _records.Clear();
+    public void Clear()
+    {
+        _records.Clear();
+        _typedText.Clear();
+    }
+
+    /// <summary>
+    /// KeyPress karakterini son KeyDown kaydına bağlar ve yazılan metne işler.
+    /// Tuş kodu klavye düzenini bilmez (ğ için Oem4 gelir), gerçek karakter yalnızca burada öğrenilir.
+    /// </summary>
+    public KeyEventRecord? AddCharacter(char character)
+    {
+        if (!IsRecording) return null;
+
+        if (character == '\b')
+        {
+            if (_typedText.Length > 0) _typedText.Length--;
+        }
+        else if (character == '\r')
+        {
+            _typedText.Append(Environment.NewLine);
+        }
+        else if (!char.IsControl(character))
+        {
+            _typedText.Append(character);
+        }
+
+        int index = _records.FindLastIndex(r => r.Kind == KeyEventKind.KeyDown);
+        if (index < 0) return null;
+        _records[index] = _records[index] with { Character = character };
+        return _records[index];
+    }
 
     /// <summary>Kayıt açıksa olayı ekler ve döndürür, kapalıysa null döndürür.</summary>
     public KeyEventRecord? Add(KeyEventKind kind, Keys key, Keys modifiers, DateTime time)
