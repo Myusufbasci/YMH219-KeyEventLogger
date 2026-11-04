@@ -3,15 +3,26 @@ namespace KeyEventLogger;
 partial class MainForm
 {
     private System.ComponentModel.IContainer components = null;
+    private Panel pnlHeader;
     private Label lblIndicator;
     private Button btnStart;
     private Button btnStop;
     private Button btnClear;
     private Button btnSave;
-    private ListBox lstEvents;
+    private ListView lvEvents;
+    private ColumnHeader colTime;
+    private ColumnHeader colKind;
+    private ColumnHeader colKey;
+    private ColumnHeader colModifiers;
+    private Panel pnlStats;
+    private Label lblLastKeyTitle;
+    private Label lblLastKey;
     private Label lblCount;
-    private Label lblScope;
+    private Label lblTopTitle;
+    private Label lblTop;
+    private Panel pnlFooter;
     private Label lblMessage;
+    private Label lblScope;
     private SaveFileDialog saveDialog;
 
     protected override void Dispose(bool disposing)
@@ -25,17 +36,44 @@ partial class MainForm
 
     private void InitializeComponent()
     {
+        pnlHeader = new Panel();
         lblIndicator = new Label();
         btnStart = new Button();
         btnStop = new Button();
         btnClear = new Button();
         btnSave = new Button();
-        lstEvents = new ListBox();
+        lvEvents = new ListView();
+        colTime = new ColumnHeader();
+        colKind = new ColumnHeader();
+        colKey = new ColumnHeader();
+        colModifiers = new ColumnHeader();
+        pnlStats = new Panel();
+        lblLastKeyTitle = new Label();
+        lblLastKey = new Label();
         lblCount = new Label();
-        lblScope = new Label();
+        lblTopTitle = new Label();
+        lblTop = new Label();
+        pnlFooter = new Panel();
         lblMessage = new Label();
+        lblScope = new Label();
         saveDialog = new SaveFileDialog();
+        pnlHeader.SuspendLayout();
+        pnlStats.SuspendLayout();
+        pnlFooter.SuspendLayout();
         SuspendLayout();
+        //
+        // pnlHeader
+        //
+        pnlHeader.BackColor = Color.FromArgb(38, 50, 56);
+        pnlHeader.Controls.Add(lblIndicator);
+        pnlHeader.Controls.Add(btnStart);
+        pnlHeader.Controls.Add(btnStop);
+        pnlHeader.Controls.Add(btnClear);
+        pnlHeader.Controls.Add(btnSave);
+        pnlHeader.Dock = DockStyle.Top;
+        pnlHeader.Location = new Point(0, 0);
+        pnlHeader.Name = "pnlHeader";
+        pnlHeader.Size = new Size(780, 60);
         //
         // lblIndicator
         //
@@ -43,75 +81,171 @@ partial class MainForm
         lblIndicator.ForeColor = Color.White;
         lblIndicator.Location = new Point(12, 12);
         lblIndicator.Name = "lblIndicator";
-        lblIndicator.Size = new Size(160, 32);
+        lblIndicator.Size = new Size(170, 36);
         lblIndicator.TextAlign = ContentAlignment.MiddleCenter;
         //
         // btnStart
         //
-        btnStart.Location = new Point(184, 12);
+        btnStart.FlatAppearance.BorderSize = 0;
+        btnStart.FlatStyle = FlatStyle.Flat;
+        btnStart.ForeColor = Color.White;
+        btnStart.Location = new Point(196, 12);
         btnStart.Name = "btnStart";
-        btnStart.Size = new Size(85, 32);
+        btnStart.Size = new Size(90, 36);
         btnStart.Text = "&Başlat";
+        btnStart.UseVisualStyleBackColor = false;
         btnStart.Click += BtnStart_Click;
         //
         // btnStop
         //
-        btnStop.Location = new Point(275, 12);
+        btnStop.FlatAppearance.BorderSize = 0;
+        btnStop.FlatStyle = FlatStyle.Flat;
+        btnStop.ForeColor = Color.White;
+        btnStop.Location = new Point(292, 12);
         btnStop.Name = "btnStop";
-        btnStop.Size = new Size(85, 32);
+        btnStop.Size = new Size(90, 36);
         btnStop.Text = "&Durdur";
+        btnStop.UseVisualStyleBackColor = false;
         btnStop.Click += BtnStop_Click;
         //
         // btnClear
         //
-        btnClear.Location = new Point(366, 12);
+        btnClear.BackColor = Color.FromArgb(69, 90, 100);
+        btnClear.FlatAppearance.BorderSize = 0;
+        btnClear.FlatStyle = FlatStyle.Flat;
+        btnClear.ForeColor = Color.White;
+        btnClear.Location = new Point(388, 12);
         btnClear.Name = "btnClear";
-        btnClear.Size = new Size(85, 32);
+        btnClear.Size = new Size(90, 36);
         btnClear.Text = "&Temizle";
+        btnClear.UseVisualStyleBackColor = false;
         btnClear.Click += BtnClear_Click;
         //
         // btnSave
         //
-        btnSave.Location = new Point(457, 12);
+        btnSave.BackColor = Color.FromArgb(69, 90, 100);
+        btnSave.FlatAppearance.BorderSize = 0;
+        btnSave.FlatStyle = FlatStyle.Flat;
+        btnSave.ForeColor = Color.White;
+        btnSave.Location = new Point(484, 12);
         btnSave.Name = "btnSave";
-        btnSave.Size = new Size(115, 32);
+        btnSave.Size = new Size(130, 36);
         btnSave.Text = "Dosyaya &Kaydet";
+        btnSave.UseVisualStyleBackColor = false;
         btnSave.Click += BtnSave_Click;
         //
-        // lstEvents
+        // lvEvents
         //
-        lstEvents.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        lstEvents.Font = new Font("Consolas", 10F);
-        lstEvents.IntegralHeight = false;
-        lstEvents.ItemHeight = 15;
-        lstEvents.Location = new Point(12, 54);
-        lstEvents.Name = "lstEvents";
-        lstEvents.Size = new Size(560, 300);
+        lvEvents.BorderStyle = BorderStyle.None;
+        lvEvents.Columns.AddRange(new ColumnHeader[] { colTime, colKind, colKey, colModifiers });
+        lvEvents.Dock = DockStyle.Fill;
+        lvEvents.FullRowSelect = true;
+        lvEvents.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+        lvEvents.Location = new Point(0, 60);
+        lvEvents.MultiSelect = false;
+        lvEvents.Name = "lvEvents";
+        lvEvents.Size = new Size(560, 390);
+        lvEvents.View = View.Details;
+        //
+        // colTime
+        //
+        colTime.Text = "Tarih ve saat";
+        colTime.Width = 180;
+        //
+        // colKind
+        //
+        colKind.Text = "Olay";
+        colKind.Width = 80;
+        //
+        // colKey
+        //
+        colKey.Text = "Tuş";
+        colKey.Width = 130;
+        //
+        // colModifiers
+        //
+        colModifiers.Text = "Birlikte basılan";
+        colModifiers.Width = 145;
+        //
+        // pnlStats
+        //
+        pnlStats.BackColor = Color.FromArgb(236, 239, 241);
+        pnlStats.Controls.Add(lblLastKeyTitle);
+        pnlStats.Controls.Add(lblLastKey);
+        pnlStats.Controls.Add(lblCount);
+        pnlStats.Controls.Add(lblTopTitle);
+        pnlStats.Controls.Add(lblTop);
+        pnlStats.Dock = DockStyle.Right;
+        pnlStats.Location = new Point(560, 60);
+        pnlStats.Name = "pnlStats";
+        pnlStats.Size = new Size(220, 390);
+        //
+        // lblLastKeyTitle
+        //
+        lblLastKeyTitle.AutoSize = true;
+        lblLastKeyTitle.Location = new Point(14, 14);
+        lblLastKeyTitle.Name = "lblLastKeyTitle";
+        lblLastKeyTitle.Text = "Son tuş";
+        //
+        // lblLastKey
+        //
+        lblLastKey.AutoEllipsis = true;
+        lblLastKey.BackColor = Color.White;
+        lblLastKey.BorderStyle = BorderStyle.FixedSingle;
+        lblLastKey.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+        lblLastKey.Location = new Point(14, 38);
+        lblLastKey.Name = "lblLastKey";
+        lblLastKey.Size = new Size(192, 72);
+        lblLastKey.Text = "-";
+        lblLastKey.TextAlign = ContentAlignment.MiddleCenter;
         //
         // lblCount
         //
-        lblCount.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         lblCount.AutoSize = true;
-        lblCount.Location = new Point(12, 362);
+        lblCount.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+        lblCount.Location = new Point(14, 122);
         lblCount.Name = "lblCount";
-        lblCount.Text = "Olay sayısı: 0";
         //
-        // lblScope
+        // lblTopTitle
         //
-        lblScope.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-        lblScope.AutoSize = true;
-        lblScope.ForeColor = SystemColors.GrayText;
-        lblScope.Location = new Point(150, 362);
-        lblScope.Name = "lblScope";
-        lblScope.Text = "Yalnızca bu pencere odaktayken basılan tuşlar görülür.";
+        lblTopTitle.AutoSize = true;
+        lblTopTitle.Location = new Point(14, 156);
+        lblTopTitle.Name = "lblTopTitle";
+        lblTopTitle.Text = "En sık basılanlar";
+        //
+        // lblTop
+        //
+        lblTop.Font = new Font("Segoe UI", 10F);
+        lblTop.Location = new Point(14, 178);
+        lblTop.Name = "lblTop";
+        lblTop.Size = new Size(192, 130);
+        //
+        // pnlFooter
+        //
+        pnlFooter.BackColor = Color.FromArgb(236, 239, 241);
+        pnlFooter.Controls.Add(lblMessage);
+        pnlFooter.Controls.Add(lblScope);
+        pnlFooter.Dock = DockStyle.Bottom;
+        pnlFooter.Location = new Point(0, 450);
+        pnlFooter.Name = "pnlFooter";
+        pnlFooter.Padding = new Padding(10, 0, 10, 0);
+        pnlFooter.Size = new Size(780, 30);
         //
         // lblMessage
         //
-        lblMessage.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         lblMessage.AutoEllipsis = true;
-        lblMessage.Location = new Point(12, 386);
+        lblMessage.Dock = DockStyle.Fill;
         lblMessage.Name = "lblMessage";
-        lblMessage.Size = new Size(560, 20);
+        lblMessage.TextAlign = ContentAlignment.MiddleLeft;
+        //
+        // lblScope
+        //
+        lblScope.Dock = DockStyle.Right;
+        lblScope.ForeColor = Color.FromArgb(84, 96, 102);
+        lblScope.Name = "lblScope";
+        lblScope.Size = new Size(280, 30);
+        lblScope.Text = "Yalnızca bu pencere odaktayken tuş görülür.";
+        lblScope.TextAlign = ContentAlignment.MiddleRight;
         //
         // saveDialog
         //
@@ -121,25 +255,25 @@ partial class MainForm
         //
         // MainForm
         //
-        AutoScaleMode = AutoScaleMode.None;
-        ClientSize = new Size(584, 414);
-        Controls.Add(lblIndicator);
-        Controls.Add(btnStart);
-        Controls.Add(btnStop);
-        Controls.Add(btnClear);
-        Controls.Add(btnSave);
-        Controls.Add(lstEvents);
-        Controls.Add(lblCount);
-        Controls.Add(lblScope);
-        Controls.Add(lblMessage);
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
+        BackColor = Color.White;
+        ClientSize = new Size(780, 480);
+        Controls.Add(lvEvents);
+        Controls.Add(pnlStats);
+        Controls.Add(pnlFooter);
+        Controls.Add(pnlHeader);
         KeyPreview = true;
-        MinimumSize = new Size(600, 300);
+        MinimumSize = new Size(760, 400);
         Name = "MainForm";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "Key Event Logger - YMH219";
         KeyDown += MainForm_KeyDown;
         KeyUp += MainForm_KeyUp;
+        pnlHeader.ResumeLayout(false);
+        pnlStats.ResumeLayout(false);
+        pnlStats.PerformLayout();
+        pnlFooter.ResumeLayout(false);
         ResumeLayout(false);
-        PerformLayout();
     }
 }
