@@ -56,7 +56,11 @@ public sealed class KeyEventLog
     public KeyEventRecord? Add(KeyEventKind kind, Keys key, Keys modifiers, DateTime time)
     {
         if (!IsRecording) return null;
-        var record = new KeyEventRecord(time, kind, key, modifiers);
+        // KeyUp için KeyPress gelmez; aynı tuşun karakteri basıldığı satırdan alınır.
+        char? character = kind == KeyEventKind.KeyUp
+            ? _records.FindLast(r => r.Kind == KeyEventKind.KeyDown && r.Key == key)?.Character
+            : null;
+        var record = new KeyEventRecord(time, kind, key, modifiers, character);
         _records.Add(record);
         return record;
     }

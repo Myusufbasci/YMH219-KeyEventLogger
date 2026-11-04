@@ -46,7 +46,7 @@ void Press(Keys key, char character)
     typing.Add(KeyEventKind.KeyUp, key, Keys.None, time);
 }
 Press(Keys.Oem4, 'ğ');
-Check(typing.Records[0].KeyName == "ğ" && typing.Records[1].KeyName == "Oem4", "Türkçe harf KeyDown satırında görünür");
+Check(typing.Records[0].KeyName == "ğ" && typing.Records[1].KeyName == "ğ", "Türkçe harf KeyDown ve KeyUp satırında görünür");
 Check(typing.Records[0].ToString().EndsWith("| Oem4 | 'ğ'"), "dosya satırı karakteri içerir: " + typing.Records[0]);
 Press(Keys.I, 'ı');
 Press(Keys.Space, ' ');
